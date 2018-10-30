@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Map, TileLayer, Marker, Popup, Polygon } from 'react-leaflet';
-import data from '../assets/coord.json';
-import GeoData from './GeoData';
+import GeoCoord from '../assets/coordonate.json'
 import Icon from './Icon';
 
 class SimpleMap extends Component{
@@ -10,40 +9,22 @@ class SimpleMap extends Component{
         positions:[],
         isLoading:true
     }
-z
-    componentDidMount(){
-        console.log("data from json " +data.latlngs[0]);
-        this.switchCoord(data.latlngs[0]);
-    }
 
-
-  switchCoord(datas){
-    //console.log( datas);
-    console.log("-----------------");
-    //remplacer latlngs par data pour fonctionner avec le fichier json
-    datas.forEach(data =>{
-      let newLat;
-      let newLng;
-      let tableWithNewCoord =[];
-      //console.log(data)
-      data.forEach(d => {
-          newLat = d[0];
-          newLng = d[1]; 
-          let switchCoordData =[newLat,newLng];
-          tableWithNewCoord.push(switchCoordData);
-        })
-        this.setState({
-          positions:[...this.state.positions,tableWithNewCoord]
-        })
-      })
+componentDidMount(){
+  this.switchCoord(GeoCoord.latlngs);
+  }
+  
+  switchCoord(latlngs){
+    console.log(latlngs);
+    let tableWithNewCoord = [];
+    latlngs.forEach( (coord) => {
+      tableWithNewCoord.push([coord[1], coord[0]])
+    });
+    this.setState({positions: tableWithNewCoord});    
   }
     
 render(){
     const newCoord = this.state.positions;
-    let polygon;
-    if(this.state.positions>0){
-      polygon = <Polygon positions={newCoord} color="red" />
-    }
     return(
         <Map className="map" center={this.props.position} zoom={this.props.zoomLevel}>
         <TileLayer
